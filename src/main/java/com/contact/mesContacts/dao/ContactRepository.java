@@ -11,7 +11,10 @@ import com.contact.mesContacts.entities.Contact;
 
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
-	@Query("select c from Contact where c.nom like :x")
+	// :x est le paramètre
+	//la méthode chercher est une sorte de méthode similaire à, par exemple, ContactRepository.findAll()
+	//mais comme checher n'existe pas alors on vient la créer ici en spécifiant ce qu'elle fait avec rqête sql
+	@Query("SELECT c FROM Contact c WHERE c.nom LIKE :x")
 	public Page<Contact> chercher(@Param("x") String mc, Pageable pegeable);
 
 }

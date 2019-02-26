@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.contact.mesContacts.dao.ContactRepository;
 import com.contact.mesContacts.entities.Contact;
 
-@RestController
+@RestController //Il s'agit d'un controller classique de Spring.
+				//Il permet de faire la conversion JSON -> Objet et inversement automatiquement grace à Spring 4
+@CrossOrigin("*") //j'autorise les navigateur à acceder ici via une url TRES IMPORTANT SANS CA CA NE MARCHERA PAS !
 public class ContactRestService {
 	
-	@Autowired
+	@Autowired // injecter la dépendance 
 	@Qualifier("contactRepository")
 	private ContactRepository contactRepository;
 	
@@ -35,14 +38,14 @@ public class ContactRestService {
 		return contactRepository.findOne(id);
 	}
 	
-	// Méthode permettant de retouner un contact par son id 
+	// Méthode permettant de chercher un contact selon un mot clé
 	
 	@RequestMapping(value="/chercherContacts", method=RequestMethod.GET)
 	public Page<Contact> chercher(
-			@RequestParam(name="mc", defaultValue="") String mc, 
+			@RequestParam(name="mc", defaultValue="") String mc, /*motclé*/
 			@RequestParam(name="page", defaultValue="0") int page, 
 			@RequestParam(name="size", defaultValue="5") int size){
-		return contactRepository.chercher(mc, new PageRequest(page, size)) ;
+		return contactRepository.chercher("%"+mc+"%", new PageRequest(page, size)) ;
 		
 	}
 	
